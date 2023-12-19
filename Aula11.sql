@@ -1,0 +1,73 @@
+CREATE TABLE #PART_A (
+    ID_Part INT NOT NULL UNIQUE,
+    NOME_Part VARCHAR(25),
+    Tel_Part CHAR(10),
+    PRIMARY KEY(ID_Part)
+)
+GO
+
+INSERT INTO #PART_A VALUES
+    (1, 'Marcelo Augusto', '3668-4545'),
+    (2, 'Maria Cristina', '3663-0909')
+GO
+
+
+CREATE TABLE ##PART_B (
+    ID_Part INT NOT NULL UNIQUE,
+    Nome_Part VARCHAR(25),
+    Tel_Part CHAR(10),
+    PRIMARY KEY(ID_Part)
+)
+GO
+
+INSERT INTO #PART_A
+    SELECT ID, Nome, Telefone
+    FROM FUNCIONARIOS
+    WHERE ID > 2
+GO
+
+SELECT * 
+    INTO FUNCIONARIOS_2
+FROM FUNCIONARIOS
+GO
+
+SELECT TABLE_CATALOG AS 'Banco de Dados',
+       TABLE_NAME AS 'Tabela',
+       ORDINAL_POSITION AS 'Posição',
+       COLUMN_NAME AS 'Coluna',
+       DATA_TYPE AS 'Tipo de Dados',
+       COLLATION_NAME AS 'Idioma da Coluna',
+       IS_NULLABLE AS 'Aceita Nulo?'
+FROM INFORMATION_SCHEMA.COLUMNS
+WHERE TABLE_NAME = 'FUNCIONARIOS_2'
+GO     
+
+SELECT OBJECT_NAME(object_id) AS 'Nome da Restrição',
+        SCHEMA_NAME(schema_id) AS 'Nome do Esquema',
+        OBJECT_NAME(parent_object_id) AS 'Nome da Tabela',
+        type_desc AS 'Tipo de Restrição'
+FROM SYS.OBJECTS
+WHERE type_desc LIKE '%CONSTRAINT' AND
+    OBJECT_NAME(parent_object_id) IN ('FUNCIONARIOS', 'FUNCIONARIOS_2')
+GO
+
+ALTER TABLE FUNCIONARIOS_2
+    ADD CONSTRAINT pk_id PRIMARY KEY(ID)
+GO
+
+DELETE FROM FUNCIONARIOS_2
+WHERE Salario < 1500
+GO
+
+TRUNCATE TABLE FUNCIONARIOS_2
+GO
+
+DROP TABLE FUNCIONARIOS_2
+GO
+
+SELECT name AS 'Nome da Tabela'
+FROM sys.tables
+GO
+
+SELECT * FROM FUNCIONARIOS_2
+GO
